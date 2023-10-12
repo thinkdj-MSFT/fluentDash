@@ -1,0 +1,7 @@
+
+1. Goto https://react.fluentui.dev/iframe.html?viewMode=docs&id=theme-colors--page
+2. Copy the entire contents as text
+3. Paste it in DesignTokens_Fluent.txt in the same format as the existing one
+
+This is the data that's used by the app for color mapping;
+
