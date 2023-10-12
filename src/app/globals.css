@@ -15,3 +15,6 @@
 body {
   color: rgb(var(--foreground-rgb));
 }
+
+
+.colorPicker-preview { border-left: 10px; }
