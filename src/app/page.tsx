@@ -115,9 +115,8 @@ export default function FluentDashColor() {
 
 			<label id={labelId}>Themes</label>
 			<div role="radiogroup" aria-labelledby={labelId}>
-				<Radio name={radioName} value='' label="All" key={0}/>
 				{ themes.map((theme, index) => {
-					return <label key={index}><Checkbox name={radioName} value={theme}/>{theme}</label>
+					return <label key={index}><Checkbox name={radioName} checked value={theme}/>{theme}</label>
 					{/*<Radio name={radioName} value={theme} label={theme} key={index}/>*/}
 				}
 				)}
