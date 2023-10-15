@@ -4,6 +4,17 @@ import {Checkbox, Input, Radio, useId} from "@fluentui/react-components";
 import {HexColorPicker} from "react-colorful";
 import {useEffect, useState} from "react";
 
+type NearestColor = {
+	name: string;
+	value: string;
+	rgb: {
+		r: number;
+		g: number;
+		b: number;
+	};
+	distance: number;
+};
+
 export default function FluentDashColor() {
 
 	const numberOfThemes = 5; // Change this based on the number of themes supported in the design tokens file
@@ -15,11 +26,13 @@ export default function FluentDashColor() {
 	const [colorPickerColor, setColorPickerColor] = useState('');
 	const [closestColor, setClosestColor] = useState('');
 
+	const separatorCustom = '.';
+
 	useEffect(() => {
 		fetch('./DesignTokens_Fluent.txt')
 			.then(response => response.text())
 			.then(text => {
-				const linesArray = text?.trim()?.split('\n');
+				const linesArray: string[] = text?.trim()?.split('\n');
 				const output = parseJsonFromText(linesArray, numberOfThemes);
 				if(!allColors.length) setAllColors(output);
 			});
@@ -29,7 +42,7 @@ export default function FluentDashColor() {
 		return input.trim().replace(/\r/g, '');
 	}
 
-	const parseJsonFromText = (input, numThemes) => {
+	const parseJsonFromText = (input: string[], numThemes: number) => {
 		const headers = input.slice(0, numThemes + 1);
 		setThemes(headers.slice(1)); // Remove "Design Tokens" header for theme names
 		const output = [];
@@ -68,7 +81,7 @@ export default function FluentDashColor() {
 	}
 
 	let colorsFiltered = allColors.reduce((acc, color) => {
-		const formattedKey = `${color.token}-${transformString(color.theme, 'spaceToUnderscore')}`;
+		const formattedKey = `${transformString(color.theme, 'spaceToUnderscore')}${separatorCustom}${color.token}`;
 		acc[formattedKey] = isValidHexColor(color.color)?color.color:'#ffffff';
 		return acc;
 	}, {});
@@ -85,12 +98,13 @@ export default function FluentDashColor() {
 		processColorInput(colorPickerColor);
 	},[colorPickerColor]);
 
-	const processColorInput = (colorHexString) => {
+	const processColorInput = (colorHexString: string) => {
 		if (isValidHexColor(colorHexString)) {
-			const closestColor = nearestColor(colorHexString);
+			const closestColor: NearestColor = nearestColor(colorHexString);
+			console.log (closestColor);
 			const ccKey = closestColor.name;
-			const ccTheme = transformString(ccKey.split('-')[1], 'underscoreToSpace');
-			const ccToken = ccKey.split('-')[0];
+			const ccTheme = transformString(ccKey.split(separatorCustom)[0], 'underscoreToSpace');
+			const ccToken = ccKey.split(separatorCustom)[1];
 			const ccFromMaster = allColors?.find(color => color.token === ccToken && color.theme === ccTheme);
 			const ccMerged = {...ccFromMaster, ...closestColor};
 			setClosestColor(ccMerged??closestColor);
