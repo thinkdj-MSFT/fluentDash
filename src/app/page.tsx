@@ -189,17 +189,20 @@ export default function FluentDashColor() {
 					<div>
 						<label className="flex justify-between">Closest color <small className='text-gray-400'>Distance ~{Math.ceil(closestColor?.distance??0)}</small></label>
 						<ColorDisplay color={closestColor} />
+						<label htmlFor="">
+							<a href={`#${closestColor?.theme}-${closestColor?.token}`}>Jump to color</a>
+						</label>
 					</div>
 				</div>
 			</div>
 
 
-			<h3>Search within</h3>
-
+			<div className='py-8'>
+				<h3>Filters / Search within:</h3>
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 					<div className="p-0">
 						<div role="menuitemcheckbox" aria-labelledby={labelThemes}>
-							<div><label id={labelThemes}>Themes</label></div>
+							<small><label id={labelThemes}>Themes</label></small>
 							<Dropdown aria-labelledby={ddThemes} placeholder="Select themes to include" multiselect style={{ width: '100%' }}
 							          defaultValue={['Light','Dark']}
 							          onOptionSelect={(e,d)=>handleFilters(d,'themes')} size="small"
@@ -215,7 +218,7 @@ export default function FluentDashColor() {
 					</div>
 					<div className="p-0">
 						<div role="menuitemcheckbox" aria-labelledby={labelCat}>
-							<div><label id={labelCat}>Color Categories</label></div>
+							<small><label id={labelCat}>Color Categories</label></small>
 							<Dropdown aria-labelledby={ddCat} placeholder="Select color categories to include" multiselect style={{ width: '100%' }} onOptionSelect={(e,d)=>handleFilters(d,'categories')} size="small">
 								{ colorCategories.map((option) => (
 									<Option key={option}>
@@ -227,7 +230,7 @@ export default function FluentDashColor() {
 
 					</div>
 				</div>
-
+			</div>
 
 			{
 				false &&
@@ -235,7 +238,6 @@ export default function FluentDashColor() {
 			}
 
 			<TableView data={allColorsFiltered} />
-
 
 		</main>
 	)

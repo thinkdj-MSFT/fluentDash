@@ -63,15 +63,17 @@ export const TableView = (props:any) => {
 				</TableRow>
 			</TableHeader>
 			<TableBody>
-				{sortedItems.map((item) => (
-					<TableRow key={item.theme+item.token}>
-						<TableCell style={{wordBreak:'break-word'}}>{item.token}</TableCell>
-						<TableCell>{item.theme}</TableCell>
-						<TableCell>
-							<TableCellLayout media={<ColorDisplay color={item.color} />} />
-						</TableCell>
-					</TableRow>
-				))}
+				{sortedItems.map((item) => {
+						const id = item.theme + '-' + item.token;
+						return <TableRow key={id} id={id}>
+							<TableCell style={{wordBreak: 'break-word'}}>{item.token}</TableCell>
+							<TableCell>{item.theme}</TableCell>
+							<TableCell>
+								<TableCellLayout media={<ColorDisplay color={item.color}/>}/>
+							</TableCell>
+						</TableRow>
+					}
+					)}
 			</TableBody>
 		</Table>
 	);
