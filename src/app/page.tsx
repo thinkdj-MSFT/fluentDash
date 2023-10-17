@@ -4,15 +4,20 @@ import {Input, useId, Dropdown, Option } from "@fluentui/react-components";
 import {HexColorPicker} from "react-colorful";
 import {useEffect, useState} from "react";
 
+type CustomColor = {
+	token: string;
+	theme: string;
+	color: string;
+};
 type NearestColor = {
+	distance: number;
 	name: string;
-	value: string;
 	rgb: {
 		r: number;
 		g: number;
 		b: number;
 	};
-	distance: number;
+	value: string;
 };
 
 export default function FluentDashColor() {
@@ -20,9 +25,9 @@ export default function FluentDashColor() {
 	const numberOfThemes = 5; // Change this based on the number of themes supported in the design tokens file
 
 	/* Colors */
-	const [allColors, setAllColors] = useState([]); // Master
-	const [allColorsFiltered, setAllColorsFiltered] = useState([]); // Filtered
-	const [closestColor, setClosestColor] = useState(''); // Closest
+	const [allColors, setAllColors] = useState<CustomColor[]>([]); // Master
+	const [allColorsFiltered, setAllColorsFiltered] = useState<CustomColor[]>([]); // Filtered
+	const [closestColor, setClosestColor] = useState<any>(''); // Closest
 
 	const [themes, setThemes] = useState([]);
 
@@ -67,14 +72,13 @@ export default function FluentDashColor() {
 			const row = input.slice(i, (i + numThemes) + 1);
 			const tokenName = row[0];
 			for (let j = 1; j < row.length; j++) {
-				const rowObject = {
+				const rowObject: CustomColor = {
 					token: cleanup(tokenName),
 					theme: cleanup(headers[j]),
 					color: cleanup(row[j]),
 				};
 				output.push(rowObject);
 			}
-
 		}
 		return output;
 	}
@@ -95,13 +99,7 @@ export default function FluentDashColor() {
 		return hexColorRegex.test(input);
 	}
 
-	let colorsFiltered = allColors.reduce((acc, color) => {
-		const formattedKey = `${transformString(color.theme, 'spaceToUnderscore')}${separatorCustom}${color.token}`;
-		acc[formattedKey] = isValidHexColor(color.color)?color.color:'#ffffff';
-		return acc;
-	}, {});
-
-	const nearestColor = require('nearest-color').from(colorsFiltered);
+	//const nearestColor = require('nearest-color').from(colorsFormattedForNC);
 
 	const handleInputChange = (e?: React.ChangeEvent<HTMLInputElement>) => {
 		const colorStr = e?.target?.value??'';
@@ -111,13 +109,20 @@ export default function FluentDashColor() {
 	}
 	useEffect(() => {
 		processColorInput(colorPickerColor);
-	},[colorPickerColor]);
+	},[colorPickerColor,allColorsFiltered]);
 
 	const processColorInput = (colorHexString: string) => {
 		if (isValidHexColor(colorHexString)) {
-			const closestColor: NearestColor = nearestColor(colorHexString);
+			if(!allColorsFiltered || !allColorsFiltered?.length) return;
+			let colorsFormattedForNC = allColorsFiltered.reduce((acc, color) => {
+				const formattedKey = `${transformString(color.theme, 'spaceToUnderscore')}${separatorCustom}${color.token}`;
+				acc[formattedKey] = isValidHexColor(color.color)?color.color:'#ffffff';
+				return acc;
+			}, {});
+			const nearestColor = require('nearest-color').from(colorsFormattedForNC);
+			const closestColor:NearestColor = nearestColor(colorHexString) ?? {};
 			console.log (closestColor);
-			const ccKey = closestColor.name;
+			const ccKey = closestColor?.name??'';
 			const ccTheme = transformString(ccKey.split(separatorCustom)[0], 'underscoreToSpace');
 			const ccToken = ccKey.split(separatorCustom)[1];
 			const ccFromMaster = allColors?.find(color => color.token === ccToken && color.theme === ccTheme);
@@ -132,20 +137,31 @@ export default function FluentDashColor() {
 	const labelThemes = useId("lbThemes");
 	const labelCat = useId("lbCategories");
 
-	const [filters, setFilters] = useState([]);
+	type Filters = {
+		themes?: string[];
+		categories?: string[];
+	};
+	const [filters, setFilters] = useState<Filters>({});
 	const handleFilters = (optionsEmitted:any,filterType:'themes'|'categories') => {
-		const existingFilters = {...filters};
+		const existingFilters: Filters = {...filters};
 		const filtersPassed = optionsEmitted?.selectedOptions;
 		switch(filterType) {
 			case 'themes':
 				existingFilters[filterType] = filtersPassed.map((f:any)=>f);
 				break;
 			case 'categories':
-				existingFilters[filterType] = filtersPassed.map((f:any)=>f);
+				existingFilters[filterType] = filtersPassed.map((f:any)=>f); // In case you want to do something else with the categories
 				break;
 		}
 		setFilters(existingFilters);
 		console.log('Filters updated:',existingFilters);
+		const colorsFilteredByTheme = allColors.filter((c:any)=>existingFilters?.themes?.includes(c.theme));
+		const colorsFilteredByTokenName = colorsFilteredByTheme.filter((c:any) =>
+			existingFilters?.categories?.some(category =>
+				c.token.toLowerCase().includes(category.toLowerCase())
+			)
+		);
+		setAllColorsFiltered(colorsFilteredByTokenName);
 	}
 
 	return (
@@ -160,7 +176,7 @@ export default function FluentDashColor() {
 				Selected color {colorPickerColor}
 			</div>
 
-			<h3>Filters</h3>
+			<h3>Search within</h3>
 
 			<div className="app-filters">
 
@@ -190,12 +206,10 @@ export default function FluentDashColor() {
 
 			<HexColorPicker color={colorPickerColor} onChange={setColorPickerColor}/>
 
-			Closest color is {closestColor?.name??''}
-			{closestColor?.distance??''}
-			{closestColor?.theme??''}
+			Closest color is {closestColor?.theme??''} -- {closestColor?.token??''} => ~{Math.ceil(closestColor?.distance??0)}
 
 			{
-				allColorsFiltered.map((c,i)=><div key={i}>{c.token}</div>)
+				allColorsFiltered.map((c,i)=><div key={i}>{c.token}{c.theme}</div>)
 			}
 
 
