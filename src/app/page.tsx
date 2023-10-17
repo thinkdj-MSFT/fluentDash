@@ -8,7 +8,7 @@ import {TableView} from "@/app/Table";
 import ColorDisplay from "@/app/partials/ColorDisplay";
 const inter = Inter({ subsets: ['latin'] });
 
-type CustomColor = {
+export type CustomColor = {
 	token: string;
 	theme: string;
 	color: string;
@@ -187,7 +187,7 @@ export default function FluentDashColor() {
 
 
 					<div>
-						<label>Closest color</label>
+						<label className="flex justify-between">Closest color <small className='text-gray-400'>Distance ~{Math.ceil(closestColor?.distance??0)}</small></label>
 						<ColorDisplay color={closestColor} />
 					</div>
 				</div>
@@ -200,7 +200,10 @@ export default function FluentDashColor() {
 					<div className="p-0">
 						<div role="menuitemcheckbox" aria-labelledby={labelThemes}>
 							<div><label id={labelThemes}>Themes</label></div>
-							<Dropdown aria-labelledby={ddThemes} placeholder="Select themes to include" multiselect style={{ width: '100%' }} onOptionSelect={(e,d)=>handleFilters(d,'themes')} size="small">
+							<Dropdown aria-labelledby={ddThemes} placeholder="Select themes to include" multiselect style={{ width: '100%' }}
+							          defaultValue={['Light','Dark']}
+							          onOptionSelect={(e,d)=>handleFilters(d,'themes')} size="small"
+							>
 								{ themes.map((option) => (
 									<Option key={option}>
 										{option}
@@ -226,10 +229,8 @@ export default function FluentDashColor() {
 				</div>
 
 
-
-			Closest color is {closestColor?.theme??''} -- {closestColor?.token??''} => ~{Math.ceil(closestColor?.distance??0)}
-
 			{
+				false &&
 				allColorsFiltered.map((c,i)=><div key={i}>{c.token}{c.theme}</div>)
 			}
 
