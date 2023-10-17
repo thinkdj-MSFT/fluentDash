@@ -1,0 +1,26 @@
+
+:root {
+    --colorDisplayBlockSize: 32px;
+}
+
+.cdContainer {
+    display: grid;
+    grid-template-columns: var(--colorDisplayBlockSize) auto;
+    grid-gap: 0.64rem;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    box-shadow: 0 0 16px rgba(0,0,0,0.16);
+    border: 1px solid #eee;
+    border-radius: 6px;
+    padding: 8px 8px;
+    margin-top: 8px;
+    margin-bottom: 27px;
+    word-break: break-word;
+}
+
+.colorDisplayBlock {
+    display: inline-block;
+    width: var(--colorDisplayBlockSize);
+    height: var(--colorDisplayBlockSize);
+    border-radius: 3px;
+}
