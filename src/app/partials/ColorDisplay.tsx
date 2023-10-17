@@ -5,6 +5,8 @@ export default function ColorDisplay (props:any) {
 	const isColObj = props?.color?.theme ?? false;
 	const color = props?.color?.value ?? props?.color ?? '#efefef';
 
+	// navigator.clipboard.writeText("Hello, world!");
+
 	return (
 		<div className={`cdContainer`}>
 			<span className="colorDisplayBlock" style={{backgroundColor:color}}></span>
