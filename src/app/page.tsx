@@ -1,8 +1,12 @@
 "use client"
+import { Inter } from 'next/font/google'
 
 import {Input, useId, Dropdown, Option } from "@fluentui/react-components";
 import {HexColorPicker} from "react-colorful";
 import {useEffect, useState} from "react";
+import {TableView} from "@/app/Table";
+import ColorDisplay from "@/app/partials/ColorDisplay";
+const inter = Inter({ subsets: ['latin'] });
 
 type CustomColor = {
 	token: string;
@@ -165,52 +169,71 @@ export default function FluentDashColor() {
 	}
 
 	return (
-		<main className="flex min-h-screen flex-col  p-24">
+		<main className={`flex min-h-screen flex-col p-24 ${inter.className}`}>
 
-			<h1>FluentDash</h1>
-			<p>Fast and Fluentious</p>
+			<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+				<div className="p-0">
+					<Input value={inputValue} onChange={handleInputChange} placeholder="HEX color code with # prefix" style={{minWidth:200}} />
+					<div>
+						<HexColorPicker color={colorPickerColor} onChange={setColorPickerColor} />
+					</div>
+				</div>
+				<div className="p-0">
 
-			<Input value={inputValue} onChange={handleInputChange} placeholder="HEX color code with # prefix" />
+					<div>
+						<label>Input color</label>
+						<ColorDisplay color={colorPickerColor} />
+					</div>
 
-			<div className="colorPicker-preview" style={{borderLeftColor: colorPickerColor}}>
-				Selected color {colorPickerColor}
+
+					<div>
+						<label>Closest color</label>
+						<ColorDisplay color={closestColor} />
+					</div>
+				</div>
 			</div>
+
 
 			<h3>Search within</h3>
 
-			<div className="app-filters">
+				<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+					<div className="p-0">
+						<div role="menuitemcheckbox" aria-labelledby={labelThemes}>
+							<div><label id={labelThemes}>Themes</label></div>
+							<Dropdown aria-labelledby={ddThemes} placeholder="Select themes to include" multiselect style={{ width: '100%' }} onOptionSelect={(e,d)=>handleFilters(d,'themes')} size="small">
+								{ themes.map((option) => (
+									<Option key={option}>
+										{option}
+									</Option>
+								)) }
+							</Dropdown>
+						</div>
 
-			<div role="menuitemcheckbox" aria-labelledby={labelThemes}>
-				<div><label id={labelThemes}>Themes</label></div>
-				<Dropdown aria-labelledby={ddThemes} placeholder="Select themes to include" multiselect style={{ width: 300 }} onOptionSelect={(e,d)=>handleFilters(d,'themes')} size="medium">
-					{ themes.map((option) => (
-						<Option key={option}>
-							{option}
-						</Option>
-					)) }
-				</Dropdown>
-			</div>
+					</div>
+					<div className="p-0">
+						<div role="menuitemcheckbox" aria-labelledby={labelCat}>
+							<div><label id={labelCat}>Color Categories</label></div>
+							<Dropdown aria-labelledby={ddCat} placeholder="Select color categories to include" multiselect style={{ width: '100%' }} onOptionSelect={(e,d)=>handleFilters(d,'categories')} size="small">
+								{ colorCategories.map((option) => (
+									<Option key={option}>
+										{option}
+									</Option>
+								)) }
+							</Dropdown>
+						</div>
 
-			<div role="menuitemcheckbox" aria-labelledby={labelCat}>
-				<div><label id={labelCat}>Color Categories</label></div>
-				<Dropdown aria-labelledby={ddCat} placeholder="Select color categories to include" multiselect style={{ width: 300 }} onOptionSelect={(e,d)=>handleFilters(d,'categories')} size="medium">
-					{ colorCategories.map((option) => (
-						<Option key={option}>
-							{option}
-						</Option>
-					)) }
-				</Dropdown>
-			</div>
+					</div>
+				</div>
 
-			</div>
 
-			<HexColorPicker color={colorPickerColor} onChange={setColorPickerColor}/>
 
 			Closest color is {closestColor?.theme??''} -- {closestColor?.token??''} => ~{Math.ceil(closestColor?.distance??0)}
 
 			{
 				allColorsFiltered.map((c,i)=><div key={i}>{c.token}{c.theme}</div>)
 			}
+
+			<TableView data={allColorsFiltered} />
 
 
 		</main>

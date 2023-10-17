@@ -2,8 +2,10 @@ import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import FluentProviderClient from './FluentProvider';
+import AppFooter from "@/app/partials/Footer";
+import AppHeader from "@/app/partials/Header";
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'FluentDash',
@@ -18,9 +20,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <FluentProviderClient>
-          {children}
-        </FluentProviderClient>
+        <div className="appContainer">
+          <FluentProviderClient>
+            <AppHeader />
+              {children}
+            <AppFooter />
+          </FluentProviderClient>
+        </div>
       </body>
     </html>
   )

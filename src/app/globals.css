@@ -16,9 +16,12 @@ body {
   color: rgb(var(--foreground-rgb));
 }
 
+.appContainer {
+  max-width: 860px;
+  margin: 0 auto;
+}
 
-.colorPicker-preview { border-left: 10px; }
-
+.colorPicker-preview { padding-top:0.7rem; border-style: solid; border-left:2rem; display:inline-block }
 
 .app-filters {
   display: grid;
