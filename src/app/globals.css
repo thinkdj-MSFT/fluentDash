@@ -18,3 +18,10 @@ body {
 
 
 .colorPicker-preview { border-left: 10px; }
+
+
+.app-filters {
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  grid-gap: 1rem;
+}

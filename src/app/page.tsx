@@ -1,6 +1,6 @@
 "use client"
 
-import {Checkbox, Input, Radio, useId} from "@fluentui/react-components";
+import {Input, useId, Dropdown, Option } from "@fluentui/react-components";
 import {HexColorPicker} from "react-colorful";
 import {useEffect, useState} from "react";
 
@@ -19,14 +19,26 @@ export default function FluentDashColor() {
 
 	const numberOfThemes = 5; // Change this based on the number of themes supported in the design tokens file
 
-	const [allColors, setAllColors] = useState([]);
+	/* Colors */
+	const [allColors, setAllColors] = useState([]); // Master
+	const [allColorsFiltered, setAllColorsFiltered] = useState([]); // Filtered
+	const [closestColor, setClosestColor] = useState(''); // Closest
+
 	const [themes, setThemes] = useState([]);
 
-	const [inputValue, setInputValue] = useState('');
+	const [inputValue, setInputValue] = useState('#');
 	const [colorPickerColor, setColorPickerColor] = useState('');
-	const [closestColor, setClosestColor] = useState('');
 
-	const separatorCustom = '.';
+	const separatorCustom = '.'; // Internal
+
+	const colorCategories = [
+		'Foreground',
+		'Background',
+		'Hover',
+		'Stroke',
+		'Border',
+		'Stencil',
+	];
 
 	useEffect(() => {
 		fetch('./DesignTokens_Fluent.txt')
@@ -34,7 +46,10 @@ export default function FluentDashColor() {
 			.then(text => {
 				const linesArray: string[] = text?.trim()?.split('\n');
 				const output = parseJsonFromText(linesArray, numberOfThemes);
-				if(!allColors.length) setAllColors(output);
+				if(!allColors.length) {
+					setAllColors(output); // Master
+					setAllColorsFiltered(output); // Filtered
+				}
 			});
 	}, []);
 
@@ -43,7 +58,7 @@ export default function FluentDashColor() {
 	}
 
 	const parseJsonFromText = (input: string[], numThemes: number) => {
-		const headers = input.slice(0, numThemes + 1);
+		const headers = input.slice(0, numThemes + 1).map(h=>cleanup(h));
 		setThemes(headers.slice(1)); // Remove "Design Tokens" header for theme names
 		const output = [];
 
@@ -112,36 +127,76 @@ export default function FluentDashColor() {
 		}
 	}
 
-	const radioName = useId("radio");
-	const labelId = useId("label");
+	const ddThemes = useId("ddThemes");
+	const ddCat = useId("ddCat");
+	const labelThemes = useId("lbThemes");
+	const labelCat = useId("lbCategories");
+
+	const [filters, setFilters] = useState([]);
+	const handleFilters = (optionsEmitted:any,filterType:'themes'|'categories') => {
+		const existingFilters = {...filters};
+		const filtersPassed = optionsEmitted?.selectedOptions;
+		switch(filterType) {
+			case 'themes':
+				existingFilters[filterType] = filtersPassed.map((f:any)=>f);
+				break;
+			case 'categories':
+				existingFilters[filterType] = filtersPassed.map((f:any)=>f);
+				break;
+		}
+		setFilters(existingFilters);
+		console.log('Filters updated:',existingFilters);
+	}
 
 	return (
-		<main className="flex min-h-screen flex-col items-center p-24">
+		<main className="flex min-h-screen flex-col  p-24">
 
 			<h1>FluentDash</h1>
 			<p>Fast and Fluentious</p>
 
-			<Input value={inputValue} onChange={handleInputChange}/>
+			<Input value={inputValue} onChange={handleInputChange} placeholder="HEX color code with # prefix" />
 
 			<div className="colorPicker-preview" style={{borderLeftColor: colorPickerColor}}>
 				Selected color {colorPickerColor}
 			</div>
 
-			<label id={labelId}>Themes</label>
-			<div role="radiogroup" aria-labelledby={labelId}>
-				{ themes.map((theme, index) => {
-					return <label key={index}><Checkbox name={radioName} checked value={theme}/>{theme}</label>
-					{/*<Radio name={radioName} value={theme} label={theme} key={index}/>*/}
-				}
-				)}
+			<h3>Filters</h3>
+
+			<div className="app-filters">
+
+			<div role="menuitemcheckbox" aria-labelledby={labelThemes}>
+				<div><label id={labelThemes}>Themes</label></div>
+				<Dropdown aria-labelledby={ddThemes} placeholder="Select themes to include" multiselect style={{ width: 300 }} onOptionSelect={(e,d)=>handleFilters(d,'themes')} size="medium">
+					{ themes.map((option) => (
+						<Option key={option}>
+							{option}
+						</Option>
+					)) }
+				</Dropdown>
 			</div>
 
+			<div role="menuitemcheckbox" aria-labelledby={labelCat}>
+				<div><label id={labelCat}>Color Categories</label></div>
+				<Dropdown aria-labelledby={ddCat} placeholder="Select color categories to include" multiselect style={{ width: 300 }} onOptionSelect={(e,d)=>handleFilters(d,'categories')} size="medium">
+					{ colorCategories.map((option) => (
+						<Option key={option}>
+							{option}
+						</Option>
+					)) }
+				</Dropdown>
+			</div>
+
+			</div>
+
+			<HexColorPicker color={colorPickerColor} onChange={setColorPickerColor}/>
 
 			Closest color is {closestColor?.name??''}
 			{closestColor?.distance??''}
 			{closestColor?.theme??''}
 
-			<HexColorPicker color={colorPickerColor} onChange={setColorPickerColor}/>
+			{
+				allColorsFiltered.map((c,i)=><div key={i}>{c.token}</div>)
+			}
 
 
 		</main>
