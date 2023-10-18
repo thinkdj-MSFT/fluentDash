@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 256 256" enable-background="new 0 0 256 256" xml:space="preserve">
+<metadata>@thinkdj</metadata>
+<g><g><path fill="#000000" d="M128,10C62.8,10,10,62.8,10,128c0,65.2,52.8,118,118,118c65.2,0,118-52.8,118-118C246,62.8,193.2,10,128,10z M128,224.4c-53.8,0-97.3-43.6-97.3-97.3c0-53.8,43.6-97.3,97.3-97.3s97.3,43.6,97.3,97.3C225.3,180.8,181.8,224.4,128,224.4z"/><path fill="#000000" d="M133.2,94.6c-3.2-3.2-8.4-3.2-11.6,0L70,146.2c-3.2,3.2-3.2,8.4,0,11.6s8.4,3.2,11.6,0l40-40c3.2-3.2,8.4-3.2,11.6,0l40,40c3.2,3.2,8.4,3.2,11.6,0l0,0c3.2-3.2,3.2-8.4,0-11.6L133.2,94.6z"/></g></g>
+</svg>
