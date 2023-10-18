@@ -33,10 +33,10 @@ export default function FluentDashColor() {
 	const [allColorsFiltered, setAllColorsFiltered] = useState<CustomColor[]>([]); // Filtered
 	const [closestColor, setClosestColor] = useState<any>(''); // Closest
 
-	const [themes, setThemes] = useState([]);
+	const [themes, setThemes] = useState<any[]>([]);
 
-	const [inputValue, setInputValue] = useState('#');
-	const [colorPickerColor, setColorPickerColor] = useState('');
+	const [inputValue, setInputValue] = useState<string>('#');
+	const [colorPickerColor, setColorPickerColor] = useState<string>('');
 
 	const separatorCustom = '.'; // Internal
 
@@ -148,6 +148,7 @@ export default function FluentDashColor() {
 	const [filters, setFilters] = useState<Filters>({});
 
 	const handleFilters = (optionsEmitted: any, filterType: 'themes' | 'categories') => {
+
 		const filtersPassed = optionsEmitted?.selectedOptions;
 
 		if (filtersPassed) {
@@ -183,6 +184,27 @@ export default function FluentDashColor() {
 		}
 	};
 
+	/* Scroll to top */
+	const [showsScrolBtn, setShowScrolBtn] = useState(false);
+	useEffect(() => {
+		const handleButtonVisibility = () => {
+			window.pageYOffset > 200 ? setShowScrolBtn(true) : setShowScrolBtn(false);
+		};
+		window.addEventListener("scroll", handleButtonVisibility);
+		return () => {
+			window.addEventListener("scroll", handleButtonVisibility);
+		};
+	}, []);
+	const renderScrollToTop = () => (
+		<div id="scrollToTop" onClick={() => { window.scrollTo({ top: 0, left: 0, behavior: "smooth" }); }}
+		     style={{ position: "fixed", bottom: 32, right: 32, color: "gray", textAlign: "center", cursor: "pointer", fontSize: "2rem", lineHeight: 1, textDecoration: "none" }}
+		>
+			<img src='/assets/up.svg' style={{width:32, height:32, opacity: 0.5}} />
+		</div>
+	)
+	/* / Scroll to top */
+
+
 	return (
 		<main className={`flex min-h-screen flex-col p-24 ${inter.className}`}>
 
@@ -199,7 +221,6 @@ export default function FluentDashColor() {
 						<label>Input color</label>
 						<ColorDisplay color={colorPickerColor} />
 					</div>
-
 
 					<div>
 						<label className="flex justify-between">Closest color <small className='text-gray-400'>Distance ~{Math.ceil(closestColor?.distance??0)}</small></label>
@@ -253,10 +274,14 @@ export default function FluentDashColor() {
 			}
 
 			<small style={{paddingBottom:'1.25rem', paddingTop:'0.5rem', opacity: 0.64}}>
-				Filtered by: {renderAppliedFilters('Themes')} | {renderAppliedFilters('Categories')}
+				Filtered by: {renderAppliedFilters('Themes')} &bull; {renderAppliedFilters('Categories')}
 			</small>
 
 			<TableView data={allColorsFiltered} />
+
+			{/* Scroll to top */}
+			{ showsScrolBtn && renderScrollToTop() }
+			{/* / Scroll to top */}
 
 		</main>
 	)
