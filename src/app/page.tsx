@@ -1,6 +1,6 @@
 "use client"
 
-import {Input, useId, Dropdown, Option } from "@fluentui/react-components";
+import {Input, useId, Dropdown, Option, Tooltip} from "@fluentui/react-components";
 import {HexColorPicker} from "react-colorful";
 import {useEffect, useState} from "react";
 import {TableView} from "@/app/Table";
@@ -204,7 +204,7 @@ export default function FluentDashColor() {
 		<div id="scrollToTop" onClick={() => { window.scrollTo({ top: 0, left: 0, behavior: "smooth" }); }}
 		     style={{ position: "fixed", bottom: 32, right: 32, color: "gray", textAlign: "center", cursor: "pointer", fontSize: "2rem", lineHeight: 1, textDecoration: "none" }}
 		>
-			<Image src='/assets/up.svg' style={{width:32, height:32, opacity: 0.5}} alt='' />
+			<Image src='/assets/up.svg' width={32} height={32} style={{width:32, height:32, opacity:0.5}} alt='' />
 		</div>
 	)
 	/* / Scroll to top */
@@ -230,15 +230,21 @@ export default function FluentDashColor() {
 					<div>
 						<label className="flex justify-between">
 							<span>Closest color</span>
-							<small title="Nearest neighbor search" className='text-gray-400'>Distance ~{Math.ceil(closestColor?.distance??0)}</small>
+							<Tooltip content="Nearest neighbor search" relationship="Label">
+								<small className='text-gray-400'>Distance ~{Math.ceil(closestColor?.distance??0)}</small>
+							</Tooltip>
 						</label>
 						<ColorDisplay color={closestColor} />
 						<div style={{marginTop: -20, textAlign: 'right'}}>
 							{closestColor?.theme ?
 								<small>
-									<a className="text-blue-800" href={`#${closestColor?.theme}-${closestColor?.token}`}>Jump to color</a>
+									<Tooltip content={`Jump to ${closestColor?.token??''} in table`} relationship="Label">
+										<a className="text-blue-800" href={`#${closestColor?.theme}-${closestColor?.token}`}>Jump to color</a>
+									</Tooltip>
 									&nbsp;&bull;&nbsp;
-									<a className="text-blue-800" href="javascript:void(0)" onClick={() => { navigator.clipboard.writeText(closestColor?.token); }}>Copy token</a>
+									<Tooltip content={`Copy token to clipboard`} relationship="Label">
+										<a className="text-blue-800" href="javascript:void(0)" onClick={() => { navigator.clipboard.writeText(closestColor?.token); }}>Copy token</a>
+									</Tooltip>
 								</small>
 								: null
 							}
@@ -283,7 +289,7 @@ export default function FluentDashColor() {
 
 			<small className="pb-4">
 				<label className="flex justify-between">
-					<span className='text-gray-400'><Image src='/assets/filter.svg' style={{width:12, height:12, opacity: 0.5, display: 'inline-block'}}  alt='' /> {renderAppliedFilters('Themes')} &bull; {renderAppliedFilters('Categories')}</span>
+					<span className='text-gray-400'><Image src='/assets/filter.svg' width={10} height={10} style={{opacity: 0.5, display: 'inline-block', marginRight: 2}}  alt='' /> {renderAppliedFilters('Themes')} &bull; {renderAppliedFilters('Categories')}</span>
 					<span className='text-gray-400'>{allColorsFiltered?.length??0} tokens</span>
 				</label>
 			</small>

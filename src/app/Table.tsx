@@ -7,7 +7,6 @@ import {
 	TableHeaderCell,
 	TableRow,
 	Table,
-	Avatar,
 } from "@fluentui/react-components";
 import ColorDisplay from "@/app/partials/ColorDisplay";
 
