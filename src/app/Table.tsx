@@ -49,13 +49,15 @@ export const TableView = (props:any) => {
 	}, [items, sortColumn, sortDirection]);
 
 	return (
-		<Table aria-label="Sortable Table">
+		<div style={{overflowX:'auto', width:'100%'}}>
+		<Table aria-label="Sortable Table" style={{width: '100%', minWidth: 600}}>
 			<TableHeader>
 				<TableRow>
-					{columns.map((column) => (
+					{columns.map((column, index) => (
 						<TableHeaderCell key={column.key}
 			                 onClick={() => column.isSortable && handleSort(column.key)}
 			                 sortDirection={column.key === sortColumn ? sortDirection : undefined}
+			                 style={{width: index==0?315:'auto'}}
 						>
 							{column.name}
 						</TableHeaderCell>
@@ -76,5 +78,6 @@ export const TableView = (props:any) => {
 					)}
 			</TableBody>
 		</Table>
+		</div>
 	);
 };
