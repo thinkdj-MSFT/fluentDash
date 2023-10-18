@@ -1,4 +1,5 @@
 import * as React from "react";
+import ColorDisplay from "@/app/partials/ColorDisplay";
 import {
 	TableBody,
 	TableCell,
@@ -8,7 +9,6 @@ import {
 	TableRow,
 	Table,
 } from "@fluentui/react-components";
-import ColorDisplay from "@/app/partials/ColorDisplay";
 
 type Item = {
 	token: string;
