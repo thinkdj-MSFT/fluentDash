@@ -22,6 +22,25 @@ body {
   box-shadow:0px 0px 209px 44px rgba(158, 158, 158, 0.05);
 }
 
+.grid-inputs {
+  display: grid;
+  grid-template-columns: 300px auto;
+  grid-gap: 1rem;
+  padding-top: 4rem;
+  padding-bottom: 3rem;
+  padding-left: 3rem;
+  padding-right: 3rem;
+}
+@media screen and (max-width: 800px){
+  .grid-inputs {
+    grid-template-columns: 100%;
+    grid-gap: 1rem;
+    padding-top: 2rem;
+    padding-bottom: 1rem;
+  }
+
+}
+
 .colorPicker-preview { padding-top:0.7rem; border-style: solid; border-left:2rem; display:inline-block }
 
 .app-filters {

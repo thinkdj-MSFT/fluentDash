@@ -211,9 +211,9 @@ export default function FluentDashColor() {
 
 
 	return (
-		<main className={`flex min-h-screen flex-col p-24 ${inter.className}`}>
+		<main className={`flex min-h-screen flex-col px-8 py-0 ${inter.className}`}>
 
-			<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+			<div className="grid-inputs">
 				<div className="p-0">
 					<Input value={inputValue} onChange={handleInputChange} placeholder="HEX color code with # prefix" style={{minWidth:200}} />
 					<div>
@@ -222,7 +222,7 @@ export default function FluentDashColor() {
 				</div>
 				<div className="p-0">
 
-					<div className="pb-3">
+					<div className="pb-3 pt-3">
 						<label>Input color</label>
 						<ColorDisplay color={colorPickerColor} />
 					</div>
@@ -253,14 +253,13 @@ export default function FluentDashColor() {
 				</div>
 			</div>
 
-
 			<div className='py-4'>
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 					<div className="p-0">
 						<div role="list" aria-labelledby={labelThemes}>
 							<small><label id={labelThemes}>Themes</label></small>
 							<Dropdown aria-labelledby={ddThemes} placeholder="Select themes to filter" multiselect style={{ width: '100%' }}
-							          onOptionSelect={(e,d)=>handleFilters(d,'themes')} size="small"
+							          onOptionSelect={(e,d)=>handleFilters(d,'themes')} size="medium"
 							>
 								{ themes.map((option) => (
 									<Option key={option}>
@@ -274,7 +273,7 @@ export default function FluentDashColor() {
 					<div className="p-0">
 						<div role="list" aria-labelledby={labelCat}>
 							<small><label id={labelCat}>Color Categories</label></small>
-							<Dropdown aria-labelledby={ddCat} placeholder="Select color categories to filter" multiselect style={{ width: '100%' }} onOptionSelect={(e,d)=>handleFilters(d,'categories')} size="small">
+							<Dropdown aria-labelledby={ddCat} placeholder="Select color categories to filter" multiselect style={{ width: '100%' }} onOptionSelect={(e,d)=>handleFilters(d,'categories')} size="medium">
 								{ colorCategories.map((option) => (
 									<Option key={option}>
 										{option}
