@@ -146,27 +146,42 @@ export default function FluentDashColor() {
 		categories?: string[];
 	};
 	const [filters, setFilters] = useState<Filters>({});
-	const handleFilters = (optionsEmitted:any,filterType:'themes'|'categories') => {
-		const existingFilters: Filters = {...filters};
+
+	const handleFilters = (optionsEmitted: any, filterType: 'themes' | 'categories') => {
 		const filtersPassed = optionsEmitted?.selectedOptions;
-		switch(filterType) {
-			case 'themes':
-				existingFilters[filterType] = filtersPassed.map((f:any)=>f);
-				break;
-			case 'categories':
-				existingFilters[filterType] = filtersPassed.map((f:any)=>f); // In case you want to do something else with the categories
-				break;
+
+		if (filtersPassed) {
+			filters[filterType] = filtersPassed.map((f: any) => f);
 		}
-		setFilters(existingFilters);
-		console.log('Filters updated:',existingFilters);
-		const colorsFilteredByTheme = allColors.filter((c:any)=>existingFilters?.themes?.includes(c.theme));
-		const colorsFilteredByTokenName = colorsFilteredByTheme.filter((c:any) =>
-			existingFilters?.categories?.some(category =>
-				c.token.toLowerCase().includes(category.toLowerCase())
-			)
-		);
+
+		setFilters({ ...filters });
+		console.log('Filters updated:', filters);
+
+		const themesFilterLen = filters.themes?.length ?? 0;
+		const catFilterLen = filters.categories?.length ?? 0;
+
+		const colorsFilteredByTheme = themesFilterLen > 0 ?
+			allColors.filter((c: any) => filters.themes?.includes(c.theme)) :
+			allColors;
+
+		const colorsFilteredByTokenName = catFilterLen > 0 ?
+			colorsFilteredByTheme.filter((c: any) =>
+				filters.categories?.some(category =>
+					c.token.toLowerCase().includes(category.toLowerCase())
+				)
+			) :
+			colorsFilteredByTheme;
+
 		setAllColorsFiltered(colorsFilteredByTokenName);
-	}
+	};
+
+	const renderAppliedFilters = (filterType) => {
+		if (filters && filters[filterType.toLowerCase()]?.length > 0) {
+			return `${filterType} - ${filters[filterType.toLowerCase()]?.join(', ')}`;
+		} else {
+			return `${filterType} - No Filters`;
+		}
+	};
 
 	return (
 		<main className={`flex min-h-screen flex-col p-24 ${inter.className}`}>
@@ -198,12 +213,12 @@ export default function FluentDashColor() {
 
 
 			<div className='py-8'>
-				<h3>Filters / Search within:</h3>
+
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 					<div className="p-0">
 						<div role="menuitemcheckbox" aria-labelledby={labelThemes}>
 							<small><label id={labelThemes}>Themes</label></small>
-							<Dropdown aria-labelledby={ddThemes} placeholder="Select themes to include" multiselect style={{ width: '100%' }}
+							<Dropdown aria-labelledby={ddThemes} placeholder="Select themes to filter" multiselect style={{ width: '100%' }}
 							          defaultValue={['Light','Dark']}
 							          onOptionSelect={(e,d)=>handleFilters(d,'themes')} size="small"
 							>
@@ -219,7 +234,7 @@ export default function FluentDashColor() {
 					<div className="p-0">
 						<div role="menuitemcheckbox" aria-labelledby={labelCat}>
 							<small><label id={labelCat}>Color Categories</label></small>
-							<Dropdown aria-labelledby={ddCat} placeholder="Select color categories to include" multiselect style={{ width: '100%' }} onOptionSelect={(e,d)=>handleFilters(d,'categories')} size="small">
+							<Dropdown aria-labelledby={ddCat} placeholder="Select color categories to filter" multiselect style={{ width: '100%' }} onOptionSelect={(e,d)=>handleFilters(d,'categories')} size="small">
 								{ colorCategories.map((option) => (
 									<Option key={option}>
 										{option}
@@ -236,6 +251,10 @@ export default function FluentDashColor() {
 				false &&
 				allColorsFiltered.map((c,i)=><div key={i}>{c.token}{c.theme}</div>)
 			}
+
+			<small style={{paddingBottom:'1.25rem', paddingTop:'0.5rem', opacity: 0.64}}>
+				Filtered by: {renderAppliedFilters('Themes')} | {renderAppliedFilters('Categories')}
+			</small>
 
 			<TableView data={allColorsFiltered} />
 
