@@ -1,11 +1,12 @@
 "use client"
-import { Inter } from 'next/font/google'
 
 import {Input, useId, Dropdown, Option } from "@fluentui/react-components";
 import {HexColorPicker} from "react-colorful";
 import {useEffect, useState} from "react";
 import {TableView} from "@/app/Table";
 import ColorDisplay from "@/app/partials/ColorDisplay";
+
+import { Inter } from 'next/font/google';
 const inter = Inter({ subsets: ['latin'] });
 
 export type CustomColor = {
@@ -118,8 +119,8 @@ export default function FluentDashColor() {
 	const processColorInput = (colorHexString: string) => {
 		if (isValidHexColor(colorHexString)) {
 			if(!allColorsFiltered || !allColorsFiltered?.length) return;
-			let colorsFormattedForNC = allColorsFiltered.reduce((acc, color) => {
-				const formattedKey = `${transformString(color.theme, 'spaceToUnderscore')}${separatorCustom}${color.token}`;
+			let colorsFormattedForNC: Record<string, string> = allColorsFiltered.reduce((acc:any, color:CustomColor) => {
+				const formattedKey:string = `${transformString(color.theme, 'spaceToUnderscore')}${separatorCustom}${color.token}`;
 				acc[formattedKey] = isValidHexColor(color.color)?color.color:'#ffffff';
 				return acc;
 			}, {});
@@ -176,9 +177,12 @@ export default function FluentDashColor() {
 		setAllColorsFiltered(colorsFilteredByTokenName);
 	};
 
-	const renderAppliedFilters = (filterType) => {
-		if (filters && filters[filterType.toLowerCase()]?.length > 0) {
-			return `${filterType} - ${filters[filterType.toLowerCase()]?.join(', ')}`;
+	const renderAppliedFilters = (filterType:string) => {
+		const filterTypeFormatted: string = filterType.toLowerCase();
+		// @ts-ignore
+		if (filters && filters[filterTypeFormatted]?.length > 0) {
+			// @ts-ignore
+			return `${filterType} - ${filters[filterTypeFormatted]?.join(', ')}`;
 		} else {
 			return `${filterType} - No Filters`;
 		}
@@ -199,7 +203,7 @@ export default function FluentDashColor() {
 		<div id="scrollToTop" onClick={() => { window.scrollTo({ top: 0, left: 0, behavior: "smooth" }); }}
 		     style={{ position: "fixed", bottom: 32, right: 32, color: "gray", textAlign: "center", cursor: "pointer", fontSize: "2rem", lineHeight: 1, textDecoration: "none" }}
 		>
-			<img src='/assets/up.svg' style={{width:32, height:32, opacity: 0.5}} />
+			<img src='/assets/up.svg' style={{width:32, height:32, opacity: 0.5}} alt='' />
 		</div>
 	)
 	/* / Scroll to top */
@@ -217,7 +221,7 @@ export default function FluentDashColor() {
 				</div>
 				<div className="p-0">
 
-					<div>
+					<div className="pb-3">
 						<label>Input color</label>
 						<ColorDisplay color={colorPickerColor} />
 					</div>
@@ -225,22 +229,27 @@ export default function FluentDashColor() {
 					<div>
 						<label className="flex justify-between">Closest color <small className='text-gray-400'>Distance ~{Math.ceil(closestColor?.distance??0)}</small></label>
 						<ColorDisplay color={closestColor} />
-						<label htmlFor="">
-							<a href={`#${closestColor?.theme}-${closestColor?.token}`}>Jump to color</a>
-						</label>
+						<div style={{marginTop: -20, textAlign: 'right'}}>
+							{closestColor?.theme ?
+								<small>
+									<a className="text-blue-800" href={`#${closestColor?.theme}-${closestColor?.token}`}>Jump to color</a>
+									&nbsp;&bull;&nbsp;
+									<a className="text-blue-800" href="javascript:void(0)" onClick={() => { navigator.clipboard.writeText(closestColor?.token); }}>Copy token</a>
+								</small>
+								: null
+							}
+						</div>
 					</div>
 				</div>
 			</div>
 
 
-			<div className='py-8'>
-
+			<div className='py-4'>
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 					<div className="p-0">
 						<div role="menuitemcheckbox" aria-labelledby={labelThemes}>
 							<small><label id={labelThemes}>Themes</label></small>
 							<Dropdown aria-labelledby={ddThemes} placeholder="Select themes to filter" multiselect style={{ width: '100%' }}
-							          defaultValue={['Light','Dark']}
 							          onOptionSelect={(e,d)=>handleFilters(d,'themes')} size="small"
 							>
 								{ themes.map((option) => (
@@ -268,13 +277,11 @@ export default function FluentDashColor() {
 				</div>
 			</div>
 
-			{
-				false &&
-				allColorsFiltered.map((c,i)=><div key={i}>{c.token}{c.theme}</div>)
-			}
-
-			<small style={{paddingBottom:'1.25rem', paddingTop:'0.5rem', opacity: 0.64}}>
-				Filtered by: {renderAppliedFilters('Themes')} &bull; {renderAppliedFilters('Categories')}
+			<small className="pb-4">
+				<label className="flex justify-between">
+					<span className='text-gray-400'><img src='/assets/filter.svg' style={{width:12, height:12, opacity: 0.5, display: 'inline-block'}}  alt='' /> {renderAppliedFilters('Themes')} &bull; {renderAppliedFilters('Categories')}</span>
+					<span className='text-gray-400'>{allColorsFiltered?.length??0} tokens</span>
+				</label>
 			</small>
 
 			<TableView data={allColorsFiltered} />

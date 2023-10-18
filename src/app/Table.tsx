@@ -28,7 +28,7 @@ export const TableView = (props:any) => {
 	const items: Item[] = props?.data ?? [];
 
 	const [sortColumn, setSortColumn] = React.useState("token");
-	const [sortDirection, setSortDirection] = React.useState<"ascending"|"descending"|undefined>("ascending");
+	const [sortDirection, setSortDirection] = React.useState<"ascending"|"descending">("ascending");
 
 	const handleSort = (columnKey: string) => {
 		if (columnKey === sortColumn) {
@@ -40,7 +40,7 @@ export const TableView = (props:any) => {
 	};
 
 	const sortedItems = React.useMemo(() => {
-		const sorted = [...items].sort((a, b) => {
+		const sorted = [...items].sort((a:any, b:any) => {
 			const aValue = a[sortColumn].toLowerCase();
 			const bValue = b[sortColumn].toLowerCase();
 			return aValue.localeCompare(bValue) * (sortDirection === "ascending" ? 1 : -1);
@@ -56,7 +56,7 @@ export const TableView = (props:any) => {
 					{columns.map((column, index) => (
 						<TableHeaderCell key={column.key}
 			                 onClick={() => column.isSortable && handleSort(column.key)}
-			                 sortDirection={column.key === sortColumn ? sortDirection : undefined}
+			                 sortDirection={column.key === sortColumn ? sortDirection : "descending"}
 			                 style={{width: index==0?315:'auto'}}
 						>
 							{column.name}
