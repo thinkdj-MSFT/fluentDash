@@ -57,7 +57,7 @@ export default function FluentDashColor() {
 			.then(text => {
 				const linesArray: string[] = text?.trim()?.split('\n');
 				const output = parseJsonFromText(linesArray, numberOfThemes);
-				if(!allColors.length) {
+				if(allColors && !allColors.length) {
 					setAllColors(output); // Master
 					setAllColorsFiltered(output); // Filtered
 				}
@@ -230,22 +230,22 @@ export default function FluentDashColor() {
 					<div>
 						<label className="flex justify-between">
 							<span>Closest color</span>
-							<Tooltip content="Nearest neighbor search" relationship="Label">
+							<Tooltip content="Nearest neighbor search" relationship="description">
 								<small className='text-gray-400'>Distance ~{Math.ceil(closestColor?.distance??0)}</small>
 							</Tooltip>
 						</label>
 						<ColorDisplay color={closestColor} />
 						<div style={{marginTop: -20, textAlign: 'right'}}>
 							{closestColor?.theme ?
-								<small>
-									<Tooltip content={`Jump to ${closestColor?.token??''} in table`} relationship="Label">
-										<a className="text-blue-800" href={`#${closestColor?.theme}-${closestColor?.token}`}>Jump to color</a>
+								<>
+									<Tooltip content={`Jump to ${closestColor?.token??''} in table`} relationship="description">
+										<small><a className="text-blue-800" href={`#${closestColor?.theme}-${closestColor?.token}`}>Jump to color</a></small>
 									</Tooltip>
 									&nbsp;&bull;&nbsp;
-									<Tooltip content={`Copy token to clipboard`} relationship="Label">
-										<a className="text-blue-800" href="javascript:void(0)" onClick={() => { navigator.clipboard.writeText(closestColor?.token); }}>Copy token</a>
+									<Tooltip content={`Copy token to clipboard`} relationship="description">
+										<small><a className="text-blue-800" href="javascript:void(0)" onClick={() => { navigator.clipboard.writeText(closestColor?.token); }}>Copy token</a></small>
 									</Tooltip>
-								</small>
+								</>
 								: null
 							}
 						</div>

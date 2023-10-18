@@ -39,6 +39,7 @@ export const TableView = (props:any) => {
 	};
 
 	const sortedItems = React.useMemo(() => {
+		if(!items) return;
 		const sorted = [...items].sort((a:any, b:any) => {
 			const aValue = a[sortColumn].toLowerCase();
 			const bValue = b[sortColumn].toLowerCase();
@@ -64,7 +65,7 @@ export const TableView = (props:any) => {
 				</TableRow>
 			</TableHeader>
 			<TableBody>
-				{sortedItems.map((item) => {
+				{sortedItems?.map((item) => {
 						const id = item.theme + '-' + item.token;
 						return <TableRow key={id} id={id}>
 							<TableCell style={{wordBreak: 'break-word'}}>{item.token}</TableCell>
