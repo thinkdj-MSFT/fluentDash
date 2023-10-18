@@ -1,5 +1,4 @@
-
-
+import Image from "next/image";
 
 export default function AppHeader () {
 
@@ -8,7 +7,7 @@ export default function AppHeader () {
 			<nav className="border-gray-200 py-2.5 px-4 dark:bg-gray-800 rounded-lg shadow">
 				<div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
 					<a href="https://flowbite.com" className="flex items-center">
-						<img src="/assets/d.png" className="mr-3 h-6 sm:h-9" alt="FluentDash" />
+						<Image src="/assets/d.png" className="mr-3 h-6 sm:h-9" alt="FluentDash" />
 						<span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">FluentDash</span>
 					</a>
 					<div className="flex items-center lg:order-2">
