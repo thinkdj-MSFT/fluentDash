@@ -127,7 +127,7 @@ export default function FluentDashColor() {
 			}, {});
 			const nearestColor = require('nearest-color').from(colorsFormattedForNC);
 			const closestColor:NearestColor = nearestColor(colorHexString) ?? {};
-			console.log (closestColor);
+			// console.log (closestColor);
 			const ccKey = closestColor?.name??'';
 			const ccTheme = transformString(ccKey.split(separatorCustom)[0], 'underscoreToSpace');
 			const ccToken = ccKey.split(separatorCustom)[1];
