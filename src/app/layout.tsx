@@ -5,6 +5,7 @@ import { Inter } from 'next/font/google'
 import FluentProviderClient from './FluentProvider';
 import AppFooter from "@/app/partials/Footer";
 import AppHeader from "@/app/partials/Header";
+import {makeImagePath} from "@/app/utils";
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -23,7 +24,7 @@ export default function RootLayout({
 
     <Head>
       <meta charSet="UTF-8" />
-      <link rel="icon" href="/assets/d.png" type="image/png" />
+      <link rel="icon" href={makeImagePath("/assets/d.png")} type="image/png" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
     </Head>
 

@@ -8,6 +8,7 @@ import ColorDisplay from "@/app/partials/ColorDisplay";
 
 import { Inter } from 'next/font/google';
 import Image from "next/image";
+import {makeImagePath} from "@/app/utils";
 const inter = Inter({ subsets: ['latin'] });
 
 export type CustomColor = {
@@ -204,7 +205,7 @@ export default function FluentDashColor() {
 		<div id="scrollToTop" onClick={() => { window.scrollTo({ top: 0, left: 0, behavior: "smooth" }); }}
 		     style={{ position: "fixed", bottom: 32, right: 32, color: "gray", textAlign: "center", cursor: "pointer", fontSize: "2rem", lineHeight: 1, textDecoration: "none" }}
 		>
-			<Image src='/assets/up.svg' width={32} height={32} style={{width:32, height:32, opacity:0.5}} alt='' />
+			<Image src={makeImagePath("/assets/up.svg")} width={32} height={32} style={{width:32, height:32, opacity:0.5}} alt='' />
 		</div>
 	)
 	/* / Scroll to top */
@@ -288,7 +289,7 @@ export default function FluentDashColor() {
 
 			<small className="pb-4">
 				<label className="flex justify-between">
-					<span className='text-gray-400'><Image src='/assets/filter.svg' width={10} height={10} style={{opacity: 0.5, display: 'inline-block', marginRight: 2}}  alt='' /> {renderAppliedFilters('Themes')} &bull; {renderAppliedFilters('Categories')}</span>
+					<span className='text-gray-400'><Image src={makeImagePath("/assets/filter.svg")} width={10} height={10} style={{opacity: 0.5, display: 'inline-block', marginRight: 2}}  alt='' /> {renderAppliedFilters('Themes')} &bull; {renderAppliedFilters('Categories')}</span>
 					<span className='text-gray-400'>{allColorsFiltered?.length??0} tokens</span>
 				</label>
 			</small>
