@@ -229,12 +229,12 @@ export default function FluentDashColor() {
 					</div>
 
 					<div>
-						<label className="flex justify-between">
+						<div className="flex justify-between">
 							<span>Closest color</span>
-							<Tooltip content="Nearest neighbor search" relationship="description">
-								<small className='text-gray-400'>Distance ~{Math.ceil(closestColor?.distance??0)}</small>
-							</Tooltip>
-						</label>
+							{/*<Tooltip content="Nearest neighbor search" relationship="description">*/}
+								<small title="Nearest neighbor search" className='text-gray-400'>Distance ~{Math.ceil(closestColor?.distance??0)}</small>
+							{/*</Tooltip>*/}
+						</div>
 						<ColorDisplay color={closestColor} />
 						<div style={{marginTop: -20, textAlign: 'right'}}>
 							{closestColor?.theme ?
@@ -254,7 +254,9 @@ export default function FluentDashColor() {
 				</div>
 			</div>
 
-			<div className='py-4'>
+			<div className="app-filter-container">
+
+			<div className='pt-2 pb-4'>
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 					<div className="p-0">
 						<div role="list" aria-labelledby={labelThemes}>
@@ -293,6 +295,8 @@ export default function FluentDashColor() {
 					<span className='text-gray-400'>{allColorsFiltered?.length??0} tokens</span>
 				</label>
 			</small>
+
+			</div>
 
 			<TableView data={allColorsFiltered} />
 
